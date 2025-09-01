@@ -1,0 +1,139 @@
+{smcl}
+{* 08mar2002}{...}
+{hline}
+help for {hi:stlh}{right:(SJ2-4: st0024)}
+{hline}
+
+{title:Aalen's linear hazards model}
+
+{p 8 13 2}{cmd:stlh} {it:varlist} [{cmd:if} {it:exp}] [{cmd:in} {it:range}] 
+    [ {cmd:,} {cmdab:lev:el(}{it:#}{cmd:)} {cmdab:nogra:ph}
+    {cmd:nomore} {cmdab:sav:ing(}{it:string}[{cmd:, replace}]{cmd:)} 
+    {cmdab:test:wt(}{it:numlist}{cmd:)} {cmdab:nodot:s}
+    {cmdab:gen:erate(}{it:string}{cmd:)} {cmdab:tc:ent(}{it:#}{cmd:)} 
+    {it:graph_options} ]
+
+{p 4 4 2}
+{cmd:stlh} is for use with survival-time data; see help {help st}. You must
+have {cmd:stset} your data before using this command; see help {help stset}.
+
+
+{title:Description}
+
+{p 4 4 2} The {cmd:stlh} command fits Aalen's linear hazards model to the
+covariate(s) in {it:varlist}. See Aalen (1989) and Aalen (1993) for details of
+the model. See Hosmer & Royston (2002) for further details of this
+implementation with a worked example and for suggestions on how to use
+{cmd:stlh} in relation to the Cox model.
+
+{p 4 4 2} {cmd:stlh} accommodates data with right-censoring. Data with delayed
+entry and/or multiple observations per subject are also supported.
+
+{p 4 4 2}By default, {cmd:stlh} displays plots of the estimated cumulative
+regression coefficients with pointwise confidence bands.
+
+{p 4 4 2}Note that when there are ties in the survival times, the results may
+depend to some degree on the order of the observations. To ensure
+reproducibility of results, the observations are internally sorted in a unique
+order.
+
+
+{title:Options}
+
+{p 4 8 2}
+{cmd:level(}{it:#}{cmd:)} sets # to be the confidence level used for pointwise
+confidence bands in the plots. The default # is set by system global macro
+{cmd:$S_level} (default 95, giving 95% confidence bands). 
+
+{p 4 8 2}{cmd:nograph} suppresses graphical output.  
+
+{p 4 8 2}{cmd:nomore} suppresses {cmd:--more--}, pausing after displaying each
+graph. 
+
+{p 4 8 2}{cmd:saving(}{it:string}[{cmd:, replace}]{cmd:)} saves the graphs (of
+cumulative regression coefficients and their confidence bands) with
+filename(s) string<xvarname>{cmd.gph}. One graph is saved for each covariate in
+varlistr, with {cmd:, replace} required to replace existing files with the same
+names.
+
+{p 4 8 2}{cmd:testwt(}{it:numlist}{cmd:)} specifies the weights to be used in
+the tests for no covariate effect. The values in numlist may be any or all of
+the integers 1 through 4 with weights defined as follows:
+
+        1. all 1.0
+        2. size of the risk set
+        3. Kaplan-Meier estimator
+        4. Kaplan-Meier estimator divided by
+            the standard error of the regression coefficients
+	  
+{p 8 8 2}See Hosmer & Royston (2002) for comments on the properties of the
+different weights.
+
+{p 4 8 2}{cmd:nodots} suppresses the output of dots displayed for
+entertainment, with one dot shown per 100 observations processed.
+
+{p 4 8 2}{cmd:generate(}{it:string}{cmd:)} requests that variables containing
+the estimated cumulative regression coefficients and their estimated standard
+error be added to the data. The names of the new variables are string{cmd:B}<#>
+and string{cmd:S}<#>, where # is the order number of the covariate varlist.
+
+{p 8 8 2}Example: if {cmd:abc} is the chosen string then {cmd:abcB1} contains
+the estimated cumulative regression coefficients for the first covariate in
+varlist and {cmd:abcS1} contains the estimated standard errors. The final
+variable, {cmd:abc_cons}, contains results for the constant term ({cmd:_cons}).
+
+{p 4 8 2}{cmd:tcent(}{it:#}{cmd:)} specifies the upper limit on the time axis
+for the plots. The purpose is to suppress the high variability in the plot
+expected for long survival times, where the data are sparse and there is
+little information available to estimate the time-specific coefficients and
+their variance.
+
+{p 4 8 2}{it:graph_options} are any of the options allowed with {cmd:graph,}
+{cmd:twoway} except for {cmd:sort}, {cmd:pen()}, {cmd:symbol()},
+{cmd:connect()}, {cmd:t1title()}, {cmd:yline()}, and {cmd:saving()}; see help
+{help graph}. To customize your own graphs, you need to save the relevant
+quantities (see {cmd:generate()} option) and recreate the confidence bands as
+regression coefficient +/- z * standard error, where z = 1.96 for the default
+95% confidence band.
+
+
+{title:Examples}
+
+{p 4 8 2}{cmd:. stlh age beck treat}{p_end}
+{p 4 8 2}{cmd:. stlh age beck treat, generate(uis) tcent(90) level(90) test(1 2) saving(uis)}{p_end}
+
+
+{title:Authors}
+
+        David W Hosmer 
+	Dept of Biostatistics
+	Univ of Massachusetts 
+	Amherst, MA
+        {browse "mailto:hosmer@schoolph.umass.edu":hosmer@schoolph.umass.edu}
+
+        Patrick Royston
+	MRC Clinical Trials Unit 
+	London
+        {browse "mailto:patrick.royston@ctu.mrc.ac.uk":patrick.royston@@ctu.mrc.ac.uk}
+
+
+{title:References}
+
+{p 4 8 2}
+Aalen, O. O. 1989. A linear regression model for the analysis of life times.
+    {it:Statistics in Medicine} 8: 907-925. 
+
+{p 4 8 2}
+Aalen, O. O. 1993. Further results on the non-parametric linear regression
+    model in survival analysis. {it:Statistics in Medicine} 13: 1569-1588. 
+
+{p 4 8 2}
+Hosmer, D. W. and P. Royston. 2002.  Using Aaalen's linear hazards model to
+    investigate time-varying effects in the proportional hazards regression
+    model. {it:Stata Journal} 2(4): 331-350.
+
+
+{title:Also see}
+
+{p 5 14 2}Manual:  [R] stcox, sts{p_end}
+{p 5 19 2}Online:  help for {help stcox}.

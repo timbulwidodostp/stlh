@@ -1,0 +1,4 @@
+D 'stlh': Aalen's linear hazards model analysis Use stlh With STATA 19
+D
+F stlh.ado
+F stlh.hlp
